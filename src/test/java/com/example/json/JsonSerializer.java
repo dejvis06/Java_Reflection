@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.json.entity.Address;
+import com.example.json.entity.Company;
+import com.example.json.entity.Person;
 
 @SpringBootTest
 public class JsonSerializer {
@@ -15,21 +17,25 @@ public class JsonSerializer {
 
 		try {
 			Address address = new Address("Main Street", (short) 1);
+			Company company = new Company("Udemy", "Tirane", address);
+			Person person = new Person("John", true, 29, 100.555f, address, company);
 
-			String json = objectToJson(address);
+			String json = objectToJson(person, 0);
 			System.err.println(json);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static String objectToJson(Object instance) throws IllegalAccessException {
+	private static String objectToJson(Object instance, int indentSize) throws IllegalAccessException {
 
 		Field[] fields = instance.getClass().getDeclaredFields();
 		StringBuilder stringBuilder = new StringBuilder();
 
+		stringBuilder.append(indent(indentSize));
 		stringBuilder.append("{");
+		stringBuilder.append("\n");
 
 		for (int i = 0; i < fields.length; i++) {
 
@@ -39,6 +45,7 @@ public class JsonSerializer {
 			if (field.isSynthetic())
 				continue;
 
+			stringBuilder.append(indent(indentSize + 1));
 			stringBuilder.append(formatStringValue(field.getName()));
 			stringBuilder.append(":");
 
@@ -47,13 +54,17 @@ public class JsonSerializer {
 
 			} else if (field.getType().equals(String.class)) {
 				stringBuilder.append(formatStringValue(field.get(instance).toString()));
+			} else {
+				stringBuilder.append(objectToJson(field.get(instance), indentSize + 1));
 			}
 
 			if (i != fields.length - 1) {
 				stringBuilder.append(",");
 			}
+			stringBuilder.append("\n");
 		}
 
+		stringBuilder.append(indent(indentSize));
 		stringBuilder.append("}");
 		return stringBuilder.toString();
 	}
@@ -74,5 +85,14 @@ public class JsonSerializer {
 
 	private static String formatStringValue(String value) {
 		return String.format("\"%s\"", value);
+	}
+
+	private static String indent(int indentSize) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		for (int i = 0; i < indentSize; i++) {
+			stringBuilder.append("\t");
+		}
+		return stringBuilder.toString();
 	}
 }

@@ -40,4 +40,5 @@ public class Person {
 		this.address = address;
 		this.job = job;
 	}
+
 }
