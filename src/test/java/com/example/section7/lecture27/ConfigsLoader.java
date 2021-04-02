@@ -1,13 +1,13 @@
-package com.example.section7;
+package com.example.section7.lecture27;
 
 import com.example.section7.annotations.InitializerClass;
 import com.example.section7.annotations.InitializerMethod;
 
 @InitializerClass
-public class ServiceRegistry {
+public class ConfigsLoader {
 
 	@InitializerMethod
-	public void registerService() {
-		System.err.println("Service successfully registered.");
+	public void loadAllConfigs() {
+		System.err.println("Loading all configs.");
 	}
 }
