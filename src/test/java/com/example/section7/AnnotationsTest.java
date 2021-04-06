@@ -14,24 +14,28 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.util.ExceptionUtils;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.example.section7.annotations.InitializerClass;
 import com.example.section7.annotations.InitializerMethod;
 import com.example.section7.annotations.RetryOperation;
 import com.example.section7.annotations.ScanPackages;
+import com.example.section7.lecture28.BestGamesFinder;
 
 @SpringBootTest
 @ScanPackages({ "com.example.section7.lecture27" })
 public class AnnotationsTest {
 
-	@Test
-	void temp() throws Throwable {
+	// @Test
+	void scanPackage() throws Throwable {
 
 		ScanPackages scanPackages = AnnotationsTest.class.getAnnotation(ScanPackages.class);
 
@@ -39,7 +43,7 @@ public class AnnotationsTest {
 		initialize(scanPackages.value());
 	}
 
-	public void initialize(String... packageNames) throws Throwable {
+	private void initialize(String... packageNames) throws Throwable {
 
 		try {
 			List<Class<?>> classes = getAllClasses(packageNames);
